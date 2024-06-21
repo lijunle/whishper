@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import HTMLResponse
 from starlette.responses import JSONResponse
 from classes import ModelSize, Languages, DeviceType
 from transcribe import transcribe_file, transcribe_from_filename
@@ -65,6 +66,13 @@ async def transcribe_endpoint(
 async def healthcheck():
     # Simple health check endpoint
     return JSONResponse(content={"status": "healthy"})
+
+
+@app.get("/", response_class=HTMLResponse)
+def read_root():
+    indexFile = os.path.join(os.path.dirname(__file__), "index.html")
+    with open(indexFile, "r") as f:
+        return f.read()
 
 
 if __name__ == "__main__":
